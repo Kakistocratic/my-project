@@ -1,5 +1,5 @@
 // storage-adapter-import-placeholder
-import { postgresAdapter } from '@payloadcms/db-postgres'
+import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
 import { s3Storage } from '@payloadcms/storage-s3'
 
 import {
@@ -15,6 +15,7 @@ import {
 } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
+import sharp from 'sharp'; // sharp-import
 import { fileURLToPath } from 'url'
 
 import { Categories } from '@/collections/Categories'
@@ -41,7 +42,7 @@ export default buildConfig({
     user: Users.slug,
   },
   collections: [Users, Pages, Categories, Media],
-  db: postgresAdapter({
+  db: vercelPostgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
@@ -105,6 +106,7 @@ s3Storage({
     }),
   ],
   secret: process.env.PAYLOAD_SECRET || '',
+  sharp,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
