@@ -6,6 +6,11 @@ export const cssVariables = {
     s: 768,
     m: 1024,
     l: 1440,
+    xl: 1680,
+    xxl: 1920,
+    xxxl: 2560,
+    xxxxl: 3840,
+
   },
   colors: {
     base0: 'rgb(255, 255, 255)',
