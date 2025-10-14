@@ -10,8 +10,10 @@ export interface Props {
   height?: number
   htmlElement?: ElementType | null
   imgClassName?: string
+  loading?: 'lazy' | 'eager' // for NextImage only
   onClick?: () => void
   onLoad?: () => void
+  pictureClassName?: string // for picture element wrapper
   priority?: boolean // for NextImage only
   ref?: Ref<HTMLImageElement | HTMLVideoElement | null>
   resource?: MediaType | string | number // for Payload media
