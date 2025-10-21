@@ -8,9 +8,8 @@ import React from 'react'
 
 import type { Props as MediaProps } from '../types'
 
-import { cssVariables } from '@/cssVariables'
-
-const { breakpoints } = cssVariables
+// Note: We're using hardcoded sizes that match Next.js deviceSizes configuration
+// instead of breakpoints from cssVariables for better optimization
 
 // A base64 encoded image to use as a placeholder while the image is loading
 const placeholderBlur =
@@ -49,22 +48,31 @@ export const Image: React.FC<MediaProps> = (props) => {
 
     width = widthFromProps ?? fullWidth
     height = heightFromProps ?? fullHeight
-    alt = altFromResource
+    alt = altFromResource || ''
 
     const cacheTag = updatedAt
 
-    // Use the URL with cache tag for better caching
+    // For Next.js image optimization, use the original image URL
+    // Next.js will handle all the resizing and optimization
     src = `${process.env.NEXT_PUBLIC_SERVER_URL}${url}${cacheTag ? `?t=${encodeURIComponent(cacheTag)}` : ''}`
   }
 
   const loading = loadingFromProps || (!priority ? 'lazy' : undefined)
 
   // NOTE: this is used by the browser to determine which image to download at different screen sizes
+  // Optimized sizes that match Next.js deviceSizes: [640, 768, 1024, 1280, 1536, 1920, 2560, 3840]
   const sizes = sizeFromProps
     ? sizeFromProps
-    : Object.entries(breakpoints)
-        .map(([, value]) => `(max-width: ${value}px) ${value * 2}w`)
-        .join(', ')
+    : [
+        '(max-width: 640px) 640w',
+        '(max-width: 768px) 768w', 
+        '(max-width: 1024px) 1024w',
+        '(max-width: 1280px) 1280w',
+        '(max-width: 1536px) 1536w',
+        '(max-width: 1920px) 1920w',
+        '(max-width: 2560px) 2560w',
+        '3840w'
+      ].join(', ')
 
   return (
     <picture className={cn(pictureClassName)}>
