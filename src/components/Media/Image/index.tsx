@@ -52,9 +52,15 @@ export const Image: React.FC<MediaProps> = (props) => {
 
     const cacheTag = updatedAt
 
-    // For Next.js image optimization, use the original image URL
-    // Next.js will handle all the resizing and optimization
-    src = `${process.env.NEXT_PUBLIC_SERVER_URL}${url}${cacheTag ? `?t=${encodeURIComponent(cacheTag)}` : ''}`
+    // Check if URL is already absolute (starts with http:// or https://)
+    // If it's relative, prepend the server URL
+    if (url?.startsWith('http://') || url?.startsWith('https://')) {
+      src = `${url}${cacheTag ? `?t=${encodeURIComponent(cacheTag)}` : ''}`
+    } else {
+      // For Next.js image optimization, use the original image URL
+      // Next.js will handle all the resizing and optimization
+      src = `${process.env.NEXT_PUBLIC_SERVER_URL}${url}${cacheTag ? `?t=${encodeURIComponent(cacheTag)}` : ''}`
+    }
   }
 
   const loading = loadingFromProps || (!priority ? 'lazy' : undefined)
