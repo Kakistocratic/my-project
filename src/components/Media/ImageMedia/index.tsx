@@ -2,7 +2,7 @@
 
 import type { StaticImageData } from 'next/image'
 
-import { cn } from '@/utilities/cn'
+import { cn } from '@/utilities/ui'
 import NextImage from 'next/image'
 import React from 'react'
 
@@ -17,7 +17,7 @@ const { breakpoints } = cssVariables
 const placeholderBlur =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN89erVfwAJYwPNteQx0wAAAABJRU5ErkJggg=='
 
-export const Image: React.FC<MediaProps> = (props) => {
+export const ImageMedia: React.FC<MediaProps> = (props) => {
   const {
     alt: altFromProps,
     fill,
@@ -29,7 +29,6 @@ export const Image: React.FC<MediaProps> = (props) => {
     src: srcFromProps,
     loading: loadingFromProps,
     onLoad,
-    onClick,
   } = props
 
   let width: number | undefined
@@ -69,7 +68,6 @@ export const Image: React.FC<MediaProps> = (props) => {
         src={src as string}
         loading={loading}
         onLoad={onLoad}
-        onClick={onClick}
         style={{ display: 'block', width: '100%', height: '100%', objectFit: 'contain' }}
       />
     )
@@ -92,7 +90,6 @@ export const Image: React.FC<MediaProps> = (props) => {
         width={!fill ? width : undefined}
         fetchPriority={priority ? 'high' : undefined}
         onLoad={onLoad}
-        onClick={onClick}
       />
     </picture>
   )
