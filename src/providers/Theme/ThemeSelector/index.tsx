@@ -2,11 +2,10 @@
 
 import React, { useEffect, useState } from 'react'
 
-import type { Theme } from '../types'
 
+import { cn } from '@/utilities/cn'
 import { useTheme } from '..'
 import { themeLocalStorageKey } from '../shared'
-import { cn } from '@/utilities/cn'
 
 interface ThemeSelectorProps {
   textColorClass?: string
