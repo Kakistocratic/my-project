@@ -8,6 +8,8 @@ import {
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+import { adminOnly } from '../access/adminOnly'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -17,7 +19,10 @@ export const Media: CollectionConfig = {
   },
   slug: 'media',
   access: {
+    create: adminOnly,
+    delete: adminOnly,
     read: () => true,
+    update: adminOnly,
   },
   fields: [
     {
@@ -34,12 +39,21 @@ export const Media: CollectionConfig = {
         },
       }),
     },
+    {
+      name: 'inlineData',
+      type: 'textarea',
+      maxLength: 100000, // Allow up to 100KB of inline data
+      admin: {
+        readOnly: true,
+        description: 'Auto-generated inline data for instant rendering (SVG content or base64)',
+        condition: (data) => !!data?.inlineData,
+      },
+    },
   ],
   upload: {
     // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
     staticDir: path.resolve(dirname, '../../public/media'),
-    // Remove adminThumbnail since we're letting Next.js handle all image optimization
-    focalPoint: false,
-    // Let Next.js handle all image processing instead of Payload
+    adminThumbnail: 'thumbnail',
+    focalPoint: true,
   },
 }

@@ -128,10 +128,14 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
+    'contact-info': ContactInfo;
+    'opening-hours': OpeningHour;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    'contact-info': ContactInfoSelect<false> | ContactInfoSelect<true>;
+    'opening-hours': OpeningHoursSelect<false> | OpeningHoursSelect<true>;
   };
   locale: null;
   user: User & {
@@ -332,6 +336,10 @@ export interface Media {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Auto-generated inline data for instant rendering (SVG content or base64)
+   */
+  inlineData?: string | null;
   prefix?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -342,6 +350,8 @@ export interface Media {
   filesize?: number | null;
   width?: number | null;
   height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1342,6 +1352,7 @@ export interface CategoriesSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
+  inlineData?: T;
   prefix?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1352,6 +1363,8 @@ export interface MediaSelect<T extends boolean = true> {
   filesize?: T;
   width?: T;
   height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1747,6 +1760,72 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Header {
   id: number;
+  /**
+   * Upload a logo for light mode. Recommended size: 170x130px
+   */
+  logoLight?: (number | null) | Media;
+  /**
+   * Upload a logo for dark mode. Recommended size: 170x130px
+   */
+  logoDark?: (number | null) | Media;
+  navItems?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?: {
+            relationTo: 'pages';
+            value: number | Page;
+          } | null;
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Show Facebook and Instagram icons in the header (fetched from Contact Info)
+   */
+  showSocialMedia?: boolean | null;
+  /**
+   * Optional booking button that appears in the header after social media icons
+   */
+  bookingButton?: {
+    /**
+     * Show booking button in header
+     */
+    enabled?: boolean | null;
+    /**
+     * Button text (e.g., "Book a Table", "Reservasjon")
+     */
+    label?: string | null;
+    link?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?: {
+        relationTo: 'pages';
+        value: number | Page;
+      } | null;
+      url?: string | null;
+    };
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
+export interface Footer {
+  id: number;
+  /**
+   * Upload a logo for light mode. Recommended size: 170x130px
+   */
+  logoLight?: (number | null) | Media;
+  /**
+   * Upload a logo for dark mode. Recommended size: 170x130px
+   */
+  logoDark?: (number | null) | Media;
   navItems?:
     | {
         link: {
@@ -1767,22 +1846,88 @@ export interface Header {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "footer".
+ * via the `definition` "contact-info".
  */
-export interface Footer {
+export interface ContactInfo {
   id: number;
-  navItems?:
+  /**
+   * The heading to display above contact info (e.g., "Contact", "Kontakt")
+   */
+  sectionTitle?: string | null;
+  phoneNumber?: string | null;
+  email?: string | null;
+  facebookUrl?: string | null;
+  instagramUrl?: string | null;
+  streetAddress?: string | null;
+  city?: string | null;
+  postalCode?: string | null;
+  googleMapsConfig?: {
+    /**
+     * Your Google Maps API key (restricted to Maps JavaScript API)
+     */
+    apiKey?: string | null;
+    /**
+     * Your Google Map ID
+     */
+    mapId?: string | null;
+    /**
+     * Style ID for light theme (e.g., edc47589a16083b321f5c16d)
+     */
+    styleIdLight?: string | null;
+    /**
+     * Style ID for dark theme (e.g., edc47589a16083b32dbae02f)
+     */
+    styleIdDark?: string | null;
+    /**
+     * Latitude coordinate for the map marker
+     */
+    latitude?: number | null;
+    /**
+     * Longitude coordinate for the map marker
+     */
+    longitude?: number | null;
+    /**
+     * Map zoom level (1-20, default: 15)
+     */
+    zoomLevel?: number | null;
+    /**
+     * Title to display on the map marker
+     */
+    markerTitle?: string | null;
+    /**
+     * Map placeholder image for desktop (aspect ratio 3:1)
+     */
+    placeholderImageDesktop?: (number | null) | Media;
+    /**
+     * Map placeholder image for mobile (aspect ratio 4:5)
+     */
+    placeholderImageMobile?: (number | null) | Media;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "opening-hours".
+ */
+export interface OpeningHour {
+  id: number;
+  /**
+   * The heading to display above opening hours (e.g., "Opening Hours", "Åpningstider")
+   */
+  sectionTitle?: string | null;
+  hours?:
     | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?: {
-            relationTo: 'pages';
-            value: number | Page;
-          } | null;
-          url?: string | null;
-          label: string;
-        };
+        /**
+         * e.g., Mon-Fri, Sat-Sun, or a specific day
+         */
+        dayRange: string;
+        openingTime?: string | null;
+        closingTime?: string | null;
+        /**
+         * Check this if the shop is closed on these days
+         */
+        isClosed?: boolean | null;
         id?: string | null;
       }[]
     | null;
@@ -1794,6 +1939,48 @@ export interface Footer {
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
+  logoLight?: T;
+  logoDark?: T;
+  navItems?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        id?: T;
+      };
+  showSocialMedia?: T;
+  bookingButton?:
+    | T
+    | {
+        enabled?: T;
+        label?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer_select".
+ */
+export interface FooterSelect<T extends boolean = true> {
+  logoLight?: T;
+  logoDark?: T;
   navItems?:
     | T
     | {
@@ -1814,21 +2001,48 @@ export interface HeaderSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "footer_select".
+ * via the `definition` "contact-info_select".
  */
-export interface FooterSelect<T extends boolean = true> {
-  navItems?:
+export interface ContactInfoSelect<T extends boolean = true> {
+  sectionTitle?: T;
+  phoneNumber?: T;
+  email?: T;
+  facebookUrl?: T;
+  instagramUrl?: T;
+  streetAddress?: T;
+  city?: T;
+  postalCode?: T;
+  googleMapsConfig?:
     | T
     | {
-        link?:
-          | T
-          | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
-            };
+        apiKey?: T;
+        mapId?: T;
+        styleIdLight?: T;
+        styleIdDark?: T;
+        latitude?: T;
+        longitude?: T;
+        zoomLevel?: T;
+        markerTitle?: T;
+        placeholderImageDesktop?: T;
+        placeholderImageMobile?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "opening-hours_select".
+ */
+export interface OpeningHoursSelect<T extends boolean = true> {
+  sectionTitle?: T;
+  hours?:
+    | T
+    | {
+        dayRange?: T;
+        openingTime?: T;
+        closingTime?: T;
+        isClosed?: T;
         id?: T;
       };
   updatedAt?: T;

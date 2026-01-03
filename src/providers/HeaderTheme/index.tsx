@@ -7,7 +7,7 @@ import React, { createContext, useCallback, useContext, useState } from 'react'
 import { canUseDOM } from '@/utilities/canUseDOM'
 
 export interface ContextType {
-  headerTheme?: Theme | null
+  headerTheme?: Theme | undefined
   setHeaderTheme: (theme: Theme | undefined) => void
 }
 

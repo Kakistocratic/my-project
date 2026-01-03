@@ -120,6 +120,7 @@ function SheetDescription({
 
 export {
   Sheet,
+  SheetPortal,
   SheetTrigger,
   SheetClose,
   SheetContent,
